@@ -597,87 +597,7 @@ main {
   display: none !important;
 }
 
-/* Deck.gl popup styles */
-.deck-popup {
-  position: absolute;
-  z-index: 1000;
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  padding: 0;
-  min-width: 280px;
-  max-width: 320px;
-  transform: translateX(-50%) translateY(-100%);
-  animation: popupSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-
-.deck-popup::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
-}
-
-.deck-popup::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid var(--bg-card);
-}
-
-@keyframes popupSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-100%) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-100%) scale(1);
-  }
-}
-
-.deck-popup .popup-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 24px;
-  height: 24px;
-  border: none;
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: all 0.2s;
-  z-index: 10;
-}
-
-.deck-popup .popup-close:hover {
-  background: var(--danger);
-  color: white;
-  transform: scale(1.1);
-}
-
-.deck-popup .popup-content {
-  padding: 1.5rem;
-  padding-top: 2rem;
-}
-
+/* Popup styles */
 .popup-content h3 {
   font-family: var(--font-display);
   font-size: 1.125rem;
@@ -873,12 +793,6 @@ main {
   .popup-content {
     padding: 1rem;
   }
-  
-  .deck-popup {
-    min-width: 250px;
-    max-width: 280px;
-    margin: 0 1rem;
-  }
 }
 
 @media (max-width: 480px) {
@@ -983,24 +897,6 @@ textarea:focus-visible {
 #map > * {
   position: relative;
   z-index: 2;
-}
-
-/* Enhanced popup positioning */
-.deck-popup,
-#demo-popup {
-  position: fixed;
-  z-index: 1000;
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  padding: 0;
-  min-width: 280px;
-  max-width: 320px;
-  transform: translateX(-50%) translateY(-100%);
-  animation: popupSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
 }
 
 /* Loading state */

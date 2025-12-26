@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import 'leaflet.marker  cluster';
+import 'leaflet.markercluster';
 import { getBookBoxes, vote, removeVote, getUserVote } from './bookboxes.js';
 import { getUser } from './auth.js';
 
