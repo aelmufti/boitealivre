@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boîtes à Livres</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="logo">
+        <span>📚</span>
+        <h1>Boîtes à Livres</h1>
+        <span class="badge">France</span>
+      </div>
+      
+      <nav id="auth-nav">
+        <button id="btn-login" class="btn btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          Connexion
+        </button>
+        <button id="btn-register" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/>
+            <line x1="22" y1="11" x2="16" y2="11"/>
+          </svg>
+          Inscription
+        </button>
+        <div id="user-menu" class="hidden">
+          <span id="user-email"></span>
+          <button id="btn-logout" class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16,17 21,12 16,7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Déconnexion
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div id="map"></div>
+
+      <button id="btn-add-box" class="btn btn-primary hidden">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Ajouter une boîte
+      </button>
+
+      <!-- Side Panel -->
+      <div id="add-panel" class="side-panel hidden">
+        <div class="panel-header">
+          <div>
+            <h2>✨ Nouvelle boîte à livres</h2>
+            <p>Cliquez sur la carte pour placer votre boîte</p>
+          </div>
+          <button id="btn-close-panel" class="panel-close">✕</button>
+        </div>
+        
+        <form id="form-add-box" class="panel-body">
+          <div class="form-group">
+            <label>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-right: 0.5rem;">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+              Nom de la boîte (optionnel)
+            </label>
+            <input type="text" id="box-name" placeholder="Ex: Boîte du parc central">
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-right: 0.5rem;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+              </svg>
+              Description (optionnel)
+            </label>
+            <textarea id="box-description" rows="3" placeholder="Quelques mots sur cette boîte à livres..."></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-right: 0.5rem;">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              Adresse *
+            </label>
+            <input type="text" id="box-address" placeholder="Adresse de la boîte à livres" required>
+          </div>
+          
+          <div class="coords-box">
+            <div class="title">
+              <span>📍</span>
+              <span>Position GPS</span>
+            </div>
+            <input type="hidden" id="box-lat">
+            <input type="hidden" id="box-lng">
+            <p class="value" id="coords-text">Cliquez sur la carte pour définir la position...</p>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" id="btn-cancel-add" class="btn btn-outline">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+              Annuler
+            </button>
+            <button type="submit" id="btn-submit-box" class="btn btn-primary" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20,6 9,17 4,12"/>
+              </svg>
+              Ajouter la boîte
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="modal-login" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>👋 Connexion</h2>
+          <button class="panel-close close">✕</button>
+        </div>
+        <form id="form-login">
+          <input type="email" placeholder="Votre adresse email" required>
+          <input type="password" placeholder="Votre mot de passe" required>
+          <button type="submit" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10,17 15,12 10,7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            Se connecter
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="modal-register" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>🚀 Inscription</h2>
+          <button class="panel-close close">✕</button>
+        </div>
+        <form id="form-register">
+          <input type="email" placeholder="Votre adresse email" required>
+          <input type="password" placeholder="Mot de passe (minimum 6 caractères)" minlength="6" required>
+          <button type="submit" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <line x1="19" y1="8" x2="19" y2="14"/>
+              <line x1="22" y1="11" x2="16" y2="11"/>
+            </svg>
+            Créer mon compte
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+node_modules
+
+.env
+dist
+
+# Cache directories
+.cache
+.parcel-cache
+.vite
+
+# Next.js
+.next
+.next/
+
+# Build outputs
+build/
+out/
