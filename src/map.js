@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import { getBookBoxes, vote, removeVote, getUserVote } from './bookboxes.js';
-import { getUser } from './auth.js';
+import { getUser, onAuthChange } from './auth.js';
 
 let map;
 let addModeActive = false;
@@ -155,6 +155,12 @@ export async function initMap() {
     // Charger les données
     console.log('📍 Chargement des boîtes à livres...');
     await loadBoxes();
+    
+    // Recharger les boîtes quand l'utilisateur se connecte/déconnecte
+    onAuthChange(async (user) => {
+      console.log('🔄 Auth changé, rechargement des boîtes...', user?.email || 'déconnecté');
+      await loadBoxes();
+    });
     
     // Géolocalisation
     requestUserLocation();
@@ -416,20 +422,25 @@ async function setupVoteListeners(box, user, marker) {
   const upvoteBtn = popup.querySelector('.upvote');
   const downvoteBtn = popup.querySelector('.downvote');
 
-  if (!user) {
+  // Toujours récupérer l'utilisateur frais
+  const currentUser = getUser();
+  
+  if (!currentUser) {
     console.log('❌ Utilisateur non connecté, votes désactivés');
     return;
   }
 
-  console.log(`🗳️ Configuration des votes pour la boîte ${box.id}, utilisateur ${user.id}`);
+  console.log(`🗳️ Configuration des votes pour la boîte ${box.id}, utilisateur ${currentUser.id}`);
 
   try {
-    let currentVote = await getUserVote(box.id, user.id);
+    let currentVote = await getUserVote(box.id, currentUser.id);
     console.log(`📊 Vote actuel: ${currentVote}`);
     
     // Reset classes
-    upvoteBtn.classList.remove('active');
-    downvoteBtn.classList.remove('active');
+    upvoteBtn.classList.remove('active', 'disabled');
+    downvoteBtn.classList.remove('active', 'disabled');
+    upvoteBtn.disabled = false;
+    downvoteBtn.disabled = false;
     
     // Apply current vote state
     if (currentVote === 1) {
@@ -438,24 +449,36 @@ async function setupVoteListeners(box, user, marker) {
       downvoteBtn.classList.add('active');
     }
 
-    // Add click handlers with fresh vote state
+    // Add click handlers with fresh user state
     upvoteBtn.onclick = async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log('👍 Clic upvote');
       
-      // Get fresh vote state
-      const freshVote = await getUserVote(box.id, user.id);
+      const freshUser = getUser();
+      if (!freshUser) {
+        console.log('❌ Utilisateur non connecté');
+        alert('Veuillez vous connecter pour voter');
+        return;
+      }
+      
+      console.log('👍 Clic upvote');
+      const freshVote = await getUserVote(box.id, freshUser.id);
       await handleVote(box.id, 1, freshVote, marker);
     };
     
     downvoteBtn.onclick = async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log('👎 Clic downvote');
       
-      // Get fresh vote state
-      const freshVote = await getUserVote(box.id, user.id);
+      const freshUser = getUser();
+      if (!freshUser) {
+        console.log('❌ Utilisateur non connecté');
+        alert('Veuillez vous connecter pour voter');
+        return;
+      }
+      
+      console.log('👎 Clic downvote');
+      const freshVote = await getUserVote(box.id, freshUser.id);
       await handleVote(box.id, -1, freshVote, marker);
     };
     
