@@ -1,0 +1,26 @@
+{
+  "name": "Boîtes à Livres",
+  "short_name": "Boîtes",
+  "description": "Trouvez et partagez des boîtes à livres en France",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#007AFF",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["books", "lifestyle", "social"],
+  "lang": "fr-FR"
+}

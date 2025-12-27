@@ -6,6 +6,19 @@ import { initMap, loadBoxes, enableAddMode, disableAddMode } from './map.js'
 import { initAuth, login, register, logout, getUser } from './auth.js'
 import { addBookBox, testVoting } from './bookboxes.js'
 
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('✅ Service Worker registered:', registration.scope)
+      })
+      .catch((error) => {
+        console.log('❌ Service Worker registration failed:', error)
+      })
+  })
+}
+
 // Notification system
 function showNotification(message, type = 'success') {
   const notification = document.createElement('div')

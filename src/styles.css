@@ -988,42 +988,247 @@ textarea {
     display: none;
   }
   
+  /* Side panel becomes bottom sheet on mobile */
   .side-panel {
-    top: 0;
+    top: auto;
+    left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
-    border-radius: 0;
+    max-height: 75vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .panel-header {
+    padding: var(--space-md);
+    position: relative;
+  }
+  
+  /* Drag handle indicator */
+  .panel-header::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: var(--glass-border);
+    border-radius: 2px;
+  }
+  
+  .panel-header h2 {
+    font-size: 1.1rem;
+    margin-top: var(--space-sm);
+  }
+  
+  .panel-header p {
+    font-size: 0.8rem;
+  }
+  
+  .panel-body {
+    padding: var(--space-md);
+    padding-bottom: calc(var(--space-xl) + env(safe-area-inset-bottom, 0));
+    max-height: calc(75vh - 80px);
+    overflow-y: auto;
+  }
+  
+  .form-group {
+    margin-bottom: var(--space-sm);
+  }
+  
+  .form-group label {
+    font-size: 0.8rem;
+    margin-bottom: var(--space-xs);
+  }
+  
+  input, textarea {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  textarea {
+    min-height: 60px;
+  }
+  
+  .coords-box {
+    padding: var(--space-sm);
+  }
+  
+  .coords-box .title {
+    font-size: 0.8rem;
+  }
+  
+  .coords-box .value {
+    font-size: 0.75rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+    padding: var(--space-md);
   }
   
   #btn-add-box {
     bottom: var(--space-md);
-    padding: var(--space-sm) var(--space-lg);
-    font-size: 0.875rem;
+    left: var(--space-md);
+    right: var(--space-md);
+    transform: none;
+    padding: var(--space-md);
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
+  }
+  
+  #btn-add-box:hover {
+    transform: none;
   }
   
   .modal-content {
-    margin: var(--space-md);
+    margin: var(--space-sm);
     max-width: none;
+    border-radius: var(--radius-lg);
+  }
+  
+  .modal-header {
+    padding: var(--space-md);
+  }
+  
+  .modal-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .modal form {
+    padding: var(--space-md);
+  }
+  
+  /* Popup adjustments */
+  .leaflet-popup-content {
+    min-width: 240px;
+  }
+  
+  .popup-content {
+    padding: var(--space-md);
+  }
+  
+  .popup-content h3 {
+    font-size: 1rem;
+  }
+  
+  .vote-section {
+    padding: var(--space-sm);
+    gap: var(--space-sm);
+  }
+  
+  .vote-btn {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.8rem;
+  }
+  
+  .vote-section .score {
+    font-size: 1.1rem;
+    min-width: 32px;
   }
 }
 
 @media (max-width: 480px) {
+  header {
+    padding: var(--space-xs) var(--space-sm);
+  }
+  
+  .logo {
+    gap: var(--space-xs);
+  }
+  
   .logo span:first-child {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+  }
+  
+  .logo h1 {
+    font-size: 0.9rem;
+  }
+  
+  #auth-nav {
+    gap: var(--space-xs);
   }
   
   #auth-nav .btn {
     padding: var(--space-xs) var(--space-sm);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    border-radius: var(--radius-sm);
   }
   
   #auth-nav .btn svg {
     display: none;
   }
   
+  #user-menu {
+    gap: var(--space-sm);
+  }
+  
+  #user-email {
+    font-size: 0.7rem;
+    padding: var(--space-xs) var(--space-sm);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .side-panel {
+    max-height: 80vh;
+  }
+  
+  .panel-header h2 {
+    font-size: 1rem;
+  }
+  
   .panel-body {
-    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+  
+  #btn-add-box {
+    bottom: var(--space-sm);
+    left: var(--space-sm);
+    right: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9rem;
+  }
+  
+  /* Notification positioning */
+  .notification {
+    top: 70px;
+    left: var(--space-sm);
+    right: var(--space-sm);
+    font-size: 0.875rem;
+  }
+}
+
+/* Safe area for notched phones */
+@supports (padding: env(safe-area-inset-bottom)) {
+  #btn-add-box {
+    padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
+  }
+  
+  .side-panel .form-actions {
+    padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
   }
 }
 
